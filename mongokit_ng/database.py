@@ -1,5 +1,7 @@
 from pymongo.database import Database as PymongoDB
 from .collection import Collection
+from .document import Document
+from . import DBRef
 
 class Database(PymongoDB):
     def __init__(self, *args, **kwargs):
