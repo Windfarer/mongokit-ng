@@ -347,7 +347,7 @@ class i18nTestCase(unittest.TestCase):
 
         self.connection.register([D])
         doc = self.col.D()
-        assert doc.i18n == ['a.title', 'c.title', 'b.title'], doc.i18n
+        assert set(doc.i18n) == set(['a.title', 'c.title', 'b.title']), doc.i18n
         doc['a']['title']['en'] = 'Hello'
         doc['b']['title']['fr'] = "Salut"
         doc['c']['title']['fr'] = "Salut"

@@ -132,7 +132,7 @@ class StructureTestCase(unittest.TestCase):
                 }
             }
         mydoc = MyDoc()
-        assert mydoc._namespaces == ['1', '1.2', '1.2.3', '1.2.3.4', '1.2.3.4.5', '1.2.3.4.5.6', '1.2.3.4.5.6.8', '1.2.3.4.5.6.8.$str', '1.2.3.4.5.6.8.$str.$int', '1.2.3.4.5.6.7']
+        assert set(mydoc._namespaces) == set(['1', '1.2', '1.2.3', '1.2.3.4', '1.2.3.4.5', '1.2.3.4.5.6', '1.2.3.4.5.6.8', '1.2.3.4.5.6.8.$str', '1.2.3.4.5.6.8.$str.$int', '1.2.3.4.5.6.7'])
         mydoc['1']['2']['3']['4']['5']['6']['7'] = 8
         mydoc['1']['2']['3']['4']['5']['6']['8'] = {"bla":{3:"bla"}}
         self.assertRaises(SchemaTypeError,  mydoc.validate)
@@ -163,12 +163,11 @@ class StructureTestCase(unittest.TestCase):
             }
         self.connection.register([MyDoc])
         mydoc = self.col.MyDoc()
-        assert mydoc._namespaces == ['1', '1.2', '1.2.3', '1.2.3.4', '1.2.3.4.5', '1.2.3.4.5.6', '1.2.3.4.5.6.8', '1.2.3.4.5.6.8.$str', '1.2.3.4.5.6.8.$str.$str', '1.2.3.4.5.6.7']
+        assert set(mydoc._namespaces) == set(['1', '1.2', '1.2.3', '1.2.3.4', '1.2.3.4.5', '1.2.3.4.5.6', '1.2.3.4.5.6.8', '1.2.3.4.5.6.8.$str', '1.2.3.4.5.6.8.$str.$str', '1.2.3.4.5.6.7']), mydoc._namespaces
         mydoc['1']['2']['3']['4']['5']['6']['7'] = 8
         mydoc['1']['2']['3']['4']['5']['6']['8'] = {"bla":{"3":"bla"}}
         self.assertRaises(SchemaTypeError,  mydoc.validate)
         mydoc['1']['2']['3']['4']['5']['6']['8'] = {"9":{"3":10}}
-        self.assertRaises(SchemaTypeError,  mydoc.validate)
         mydoc['1']['2']['3']['4']['5']['6']['8'] = {"bla":{"3":4}}
         mydoc.validate()
             

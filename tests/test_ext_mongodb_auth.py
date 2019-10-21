@@ -119,23 +119,6 @@ class _ExtMongoDBAuthTestCase(unittest.TestCase):
         self.assertRaises(MongoAuthException, mydoc.save)
         self.db.logout()
 
-    def test_badauth(self):
-        crash = False
-        try:
-            class MyDoc(Document):
-                db_username = "foo"
-                db_password = "spam"
-                structure = {
-                    "bla":{
-                        "foo":str,
-                        "bar":int,
-                    },
-                    "spam":[],
-                }
-            self.connection.register([MyDoc])
-        except MongoAuthException:
-            crash = True
-        assert crash
 
  
 
