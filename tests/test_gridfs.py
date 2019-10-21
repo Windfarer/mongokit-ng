@@ -65,10 +65,10 @@ class GridFSTestCase(unittest.TestCase):
             assertion = True
         assert assertion
         doc.fs.source = "Hello World !"
-        assert doc.fs.source == "Hello World !", doc.fs.source
+        assert doc.fs.source == b"Hello World !", doc.fs.source
 
         doc = self.col.Doc.find_one({'title':'Hello'})
-        assert doc.fs.source == "Hello World !"
+        assert doc.fs.source == b"Hello World !"
 
         f = doc.fs.get_last_version('source')
         assert f.name == 'source'
@@ -120,11 +120,6 @@ class GridFSTestCase(unittest.TestCase):
             assertion = True
         assert assertion
         assertion = False
-        try:
-            doc.fs.source = "Hello World !"
-        except TypeError:
-            assertion = True
-        assert assertion
 
     def test_gridfs_with_container(self):
         class Doc(Document):
@@ -142,7 +137,7 @@ class GridFSTestCase(unittest.TestCase):
         doc.save()
 
         doc.fs.source = "Hello World !"
-        assert doc.fs.source == "Hello World !"
+        assert doc.fs.source == b"Hello World !", doc.fs.source
 
         assertion = False
         try:
@@ -154,11 +149,11 @@ class GridFSTestCase(unittest.TestCase):
         doc.fs.images['first.jpg'] = "My first image"
         doc.fs.images['second.jpg'] = "My second image"
 
-        assert doc.fs.images['first.jpg'] == 'My first image', doc.fs.images['first.jpg']
-        assert doc.fs.images['second.jpg'] == 'My second image'
+        assert doc.fs.images['first.jpg'] == b'My first image', doc.fs.images['first.jpg']
+        assert doc.fs.images['second.jpg'] == b'My second image'
 
         doc.fs.images['first.jpg'] = "My very first image"
-        assert doc.fs.images['first.jpg'] == 'My very first image', doc.fs.images['first.jpg']
+        assert doc.fs.images['first.jpg'] == b'My very first image', doc.fs.images['first.jpg']
 
         del doc.fs.images['first.jpg']
 
@@ -204,19 +199,19 @@ class GridFSTestCase(unittest.TestCase):
         f = doc.fs.new_file("bla")
         f.write('Salut !')
         f.close()
-        assert doc.fs.bla == "Salut !"
-        assert doc.fs.foo == "Hello World !"
+        assert doc.fs.bla == b"Salut !", doc.fs.bla
+        assert doc.fs.foo == b"Hello World !", doc.fs.foo
 
         f = doc.fs.attachments.new_file('test')
         f.write('this is a test')
         f.close()
-        assert doc.fs.attachments['test'] == 'this is a test'
+        assert doc.fs.attachments['test'] == b'this is a test', doc.fs.attachments['test']
 
         doc = self.col.Doc.find_one()
-        assert doc.fs.bla == "Salut !"
-        assert doc.fs.foo == "Hello World !"
-        assert doc.fs.attachments['test'] == 'this is a test', doc.fs.attachments['test']
-        assert doc.fs.attachments.get_last_version('test').read() == 'this is a test'
+        assert doc.fs.bla == b"Salut !", doc.fs.bla
+        assert doc.fs.foo == b"Hello World !", doc.fs.foo 
+        assert doc.fs.attachments['test'] == b'this is a test', doc.fs.attachments['test']
+        assert doc.fs.attachments.get_last_version('test').read() == b'this is a test', doc.fs.attachments.get_last_version('test').read()
 
 
     def test_pymongo_compatibility(self):
@@ -230,14 +225,14 @@ class GridFSTestCase(unittest.TestCase):
         doc['title'] = 'Hello'
         doc.save()
         id = doc.fs.put("Hello World", filename="source")
-        assert doc.fs.get(id).read() == 'Hello World'
-        assert doc.fs.get_last_version("source").name == 'source'
-        assert doc.fs.get_last_version("source").read() == 'Hello World'
+        assert doc.fs.get(id).read() == b'Hello World', doc.fs.get(id).read()
+        assert doc.fs.get_last_version("source").name == 'source', doc.fs.get_last_version("source").name
+        assert doc.fs.get_last_version("source").read() == b'Hello World', doc.fs.get_last_version("source").read()
         f = doc.fs.new_file("source")
         f.write("New Hello World!")
         f.close()
-        assert doc.fs.source == 'New Hello World!', doc.fs.source
+        assert doc.fs.source == b'New Hello World!', doc.fs.source
         new_id = doc.fs.get_last_version("source")._id
         doc.fs.delete(new_id)
-        assert doc.fs.source == 'Hello World', doc.fs.source
+        assert doc.fs.source == b'Hello World', doc.fs.source
 
