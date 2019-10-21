@@ -101,4 +101,4 @@ class User(Document):
 
     def save(self, *args, **kwargs):
         assert self['_id'] == self['user']['login']
-        super(User, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)

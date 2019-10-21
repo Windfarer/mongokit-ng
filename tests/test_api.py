@@ -1007,7 +1007,7 @@ class ApiTestCase(unittest.TestCase):
         @self.connection.register
         class DocA(Document):
            __database__ = 'test'
-           __collection__ = "doca"
+           __collection__ = "doczzz"
            structure = {'title':str}
 
         doc = self.connection.DocA()
@@ -1016,7 +1016,7 @@ class ApiTestCase(unittest.TestCase):
         doc['title'] = 'foo'
         doc.save()
 
-        self.assertEqual(self.connection.test.doca.find_one(), doc)
+        self.assertEqual(self.connection.test.doczzz.find_one(), doc)
 
     def test_float_and_int_types(self):
         @self.connection.register
@@ -1084,12 +1084,11 @@ class ApiTestCase(unittest.TestCase):
     def test_unwrapped_cursor(self):
         self.assertEqual(self.col.count(), 0)
 
-        doc_id = self.col.save({}, safe=True)
+        doc_id = self.col.save({})
         self.assertEqual(self.col.count(), 1)
 
         try:
-            self.col.find(_id=doc_id)[0]
-
+            self.col.find({"_id":doc_id})[0]
         except TypeError:
             self.fail("Cursor.__getitem__ raised TypeError unexpectedly!")
 

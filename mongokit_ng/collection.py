@@ -79,4 +79,3 @@ class Collection(PymongoCollection):
     
     def find_fulltext(self, search, **kwargs):
         return self.database.command("text", self.name, search=search, **kwargs)
-    

@@ -338,8 +338,8 @@ class SchemaDocument(dict, metaclass=SchemaProperties):
         str,
         list,
         dict,
+        bytes,
         datetime.datetime,
-        bson.binary.Binary,
         CustomType,
     ]
 

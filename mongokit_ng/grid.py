@@ -64,7 +64,7 @@ class FS(GridFS):
         spec = self._get_spec(filename=key, content_type=content_type)
         try:
             self.put(value, **spec)
-        except TypeError:
+        except TypeError as e:
             raise TypeError("GridFS value mus be string not %s" % type(value))
 
     def __getattr__(self, key):
@@ -98,10 +98,10 @@ class FS(GridFS):
         return "<%s of object '%s'>" % (self.__class__.__name__, self._obj.__class__.__name__)
 
     def new_file(self, filename):
-        return super(FS, self).new_file(**self._get_spec(filename=filename))
+        return super(FS, self).new_file(encoding='utf-8', **self._get_spec(filename=filename))
 
     def put(self, data, **kwargs):
-        return super(FS, self).put(data, **self._get_spec(**kwargs))
+        return super(FS, self).put(data, encoding='utf-8', **self._get_spec(**kwargs))
 
     def get_version(self, filename, version=-1, **kwargs):
         """Get a file from GridFS by ``"filename"`` or metadata fields.
