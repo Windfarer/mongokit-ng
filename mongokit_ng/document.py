@@ -467,8 +467,10 @@ class Document(SchemaDocument, metaclass=DocumentProperties):
                         field = (field, 1)
                     fields.append(field)
             log.debug('Creating index for {}'.format(str(given_fields)))
-            collection.ensure_index(fields, unique=unique, cache_for=ttl, **index)
-
+            if ttl and len(fields) == 1:
+                collection.create_index(fields, unique=unique, expireAfterSeconds=ttl, **index)
+            else:
+                collection.create_index(fields, unique=unique, **index)
     def to_json_type(self):
         """
         convert all document field into json type

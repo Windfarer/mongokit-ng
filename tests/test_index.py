@@ -63,8 +63,8 @@ class IndexTestCase(unittest.TestCase):
         movie.save()
 
         db = self.connection.test
-        item = db['system.indexes'].find_one({'ns':'test.mongokit', 'name': 'standard_1_other.deep_1', 'unique':True})
-        assert item is not None, 'No Index Found'
+        idx_info = self.col.index_information()
+        assert 'standard_1_other.deep_1' in idx_info and idx_info['standard_1_other.deep_1'].get('unique'), 'No Index Found'
 
         movie = self.col.Movie()
         movie['standard'] = 'test'
@@ -112,9 +112,11 @@ class IndexTestCase(unittest.TestCase):
         movie.save()
 
         db = self.connection.test
-        item = db['system.indexes'].find_one({'ns':'test.mongokit', 'name':'standard_1', 'unique':True, 'key':{'standard':1}})
-
-        assert item is not None, 'No Index Found'
+        idx_info = self.col.index_information()
+        assert 'standard_1' in idx_info, 'No Index Found'
+        idx = idx_info['standard_1']
+        assert idx.get('unique'), idx
+        assert idx['key'] == [('standard',1)]
 
     def test_index_multi(self):
         class Movie(Document):
@@ -144,11 +146,14 @@ class IndexTestCase(unittest.TestCase):
         movie.save()
 
         db = self.connection.test
-        item = db['system.indexes'].find_one({'ns':'test.mongokit', 'name':'standard_1', 'unique':True, 'key':{'standard':1}})
-        index2 = db['system.indexes'].find_one({'ns':'test.mongokit', 'name': 'alsoindexed_1_other.deep_1', 'unique':True})
-
-        assert item is not None, 'No Index Found'
-        assert index2 is not None, 'Index not found'
+        idx_info = self.col.index_information()
+        assert 'standard_1' in idx_info, 'No Index Found'
+        assert 'alsoindexed_1_other.deep_1' in idx_info, 'No Index Found'
+        idx = idx_info['standard_1']
+        idx2 = idx_info['alsoindexed_1_other.deep_1']
+        assert idx.get('unique'), idx
+        assert idx2.get('unique'), idx2
+        assert idx['key'] == [('standard',1)]
 
         movie = self.col.Movie()
         movie['standard'] = 'test'
@@ -183,11 +188,15 @@ class IndexTestCase(unittest.TestCase):
         movie.save()
 
         db = self.connection.test
-        item = db['system.indexes'].find_one({'ns':'test.mongokit', 'name':'standard_1', 'unique':True, 'key':{'standard':1}})
-        index2 = db['system.indexes'].find_one({'ns':'test.mongokit', 'name': 'other.deep_1', 'unique':True})
 
-        assert item is not None, 'No Index Found'
-        assert index2 is not None, 'Index not found'
+        idx_info = self.col.index_information()
+        assert 'standard_1' in idx_info, 'No Index Found'
+        assert 'other.deep_1' in idx_info, 'No Index Found'
+        idx = idx_info['standard_1']
+        idx2 = idx_info['other.deep_1']
+        assert idx.get('unique')
+        assert idx2.get('unique')
+        assert idx['key'] == [('standard',1)], idx['key']
 
         movie = self.col.Movie()
         movie['standard'] = 'test'
@@ -225,11 +234,14 @@ class IndexTestCase(unittest.TestCase):
         movie.save()
 
         db = self.connection.test
-        index1 = db['system.indexes'].find_one({'ns':'test.mongokit', 'name':'standard_-1', 'unique':True})
-        index2 = db['system.indexes'].find_one({'ns':'test.mongokit', 'name': 'alsoindexed_1_other.deep_-1', 'unique':True})
 
-        assert index1 is not None, 'No Index Found'
-        assert index2 is not None, 'Index not found'
+        idx_info = self.col.index_information()
+        assert 'standard_-1' in idx_info, 'No Index Found'
+        assert 'alsoindexed_1_other.deep_-1' in idx_info, 'No Index Found'
+        idx = idx_info['standard_-1']
+        idx2 = idx_info['alsoindexed_1_other.deep_-1']
+        assert idx.get('unique')
+        assert idx2.get('unique')
 
     def test_index_direction_GEO2D(self):
         class Movie(Document):
@@ -258,12 +270,13 @@ class IndexTestCase(unittest.TestCase):
         movie['standard'] = 'test'
         movie.save()
 
-        db = self.connection.test
-        index1 = db['system.indexes'].find_one({'ns':'test.mongokit', 'name':'standard_2d', 'unique':True})
-        index2 = db['system.indexes'].find_one({'ns':'test.mongokit', 'name': 'alsoindexed_2d_other.deep_-1', 'unique':True})
-
-        assert index1 is not None, 'No Index Found'
-        assert index2 is not None, 'Index not found'
+        idx_info = self.col.index_information()
+        assert 'standard_2d' in idx_info, 'No Index Found'
+        assert 'alsoindexed_2d_other.deep_-1' in idx_info, 'No Index Found'
+        idx = idx_info['standard_2d']
+        idx2 = idx_info['alsoindexed_2d_other.deep_-1']
+        assert idx.get('unique'), idx
+        assert idx2.get('unique'), idx2
 
     def test_bad_index_descriptor(self):
         failed = False
@@ -457,10 +470,11 @@ class IndexTestCase(unittest.TestCase):
         movie['standard'] = 'test'
         movie.save()
 
-        db = self.connection.test
-        item = db['system.indexes'].find_one({'ns':'test.mongokit', 'name':'standard_1', 'unique':True, 'key':{'standard':1}})
-
-        assert item is not None, 'No Index Found'
+        idx_info = self.col.index_information()
+        assert 'standard_1' in idx_info, 'No Index Found'
+        idx = idx_info['standard_1']
+        assert idx.get('unique'), idx
+        assert idx['key'] == [('standard',1)]
 
     def test_index_simple_inheritance(self):
         class DocA(Document):
@@ -488,9 +502,11 @@ class IndexTestCase(unittest.TestCase):
         docb.save()
 
         db = self.connection.test
-        item = db['system.indexes'].find_one({'ns':'test.mongokit', 'name':'standard_1', 'unique':True, 'key':{'standard':1}})
-
-        assert item is not None, 'No Index Found'
+        idx_info = self.col.index_information()
+        assert 'standard_1' in idx_info, 'No Index Found'
+        idx = idx_info['standard_1']
+        assert idx.get('unique')
+        assert idx['key'] == [('standard',1)], idx['key']
 
     def test_index_inheritance(self):
         class DocA(Document):
@@ -524,12 +540,15 @@ class IndexTestCase(unittest.TestCase):
         docb['docb'] = 'foo'
         docb.save()
 
-        db = self.connection.test
-        item = db['system.indexes'].find_one({'ns':'test.mongokit', 'name':'standard_1', 'unique':True, 'key':{'standard':1}})
-        item = db['system.indexes'].find_one({'ns':'test.mongokit', 'name':'docb_1', 'unique':True, 'key':{'docb':1}})
-
-        assert item is not None, 'No Index Found'
-
+        idx_info = self.col.index_information()
+        assert 'standard_1' in idx_info, 'No Index Found'
+        assert 'docb_1' in idx_info, 'No Index Found'
+        idx = idx_info['standard_1']
+        idx2 = idx_info['docb_1']
+        assert idx.get('unique'), idx
+        assert idx2.get('unique'), idx2
+        assert idx['key'] == [('standard',1)]
+        assert idx2['key'] == [('docb',1)]
 
     def test_index_real_world(self):
         import datetime
@@ -661,7 +680,8 @@ class IndexTestCase(unittest.TestCase):
            doc['foo'] = str(i)
            doc['bar'] = i
            doc.save()
-        assert self.col.database.system.indexes.find_one({'name': 'foo_1_bar_-1'})
+        idx_info = self.col.index_information()
+        assert 'foo_1_bar_-1' in idx_info
 
     def test_index_with_check(self):
         @self.connection.register
@@ -679,7 +699,8 @@ class IndexTestCase(unittest.TestCase):
            doc['foo']['title'] = str(i)
            doc['bar'] = i
            doc.save()
-        assert self.col.database.system.indexes.find_one({'name': 'foo.title_1'})
+        idx_info = self.col.index_information()
+        assert 'foo.title_1' in idx_info
 
     def test_index_with_check_is_true(self):
         @self.connection.register
@@ -697,7 +718,8 @@ class IndexTestCase(unittest.TestCase):
            doc['foo'] = str(i)
            doc['bar'] = i
            doc.save()
-        assert self.col.database.system.indexes.find_one({'name': 'foo_1'})
+        idx_info = self.col.index_information()
+        assert 'foo_1' in idx_info
 
     def test_index_with_additional_keywords(self):
         @self.connection.register
@@ -715,6 +737,7 @@ class IndexTestCase(unittest.TestCase):
                 }
             ]
         self.col.KWDoc.generate_index(self.col)
-        index = self.col.database.system.indexes.find_one({'name': 'additional_kws'})
-        assert index["name"] == 'additional_kws'
-        assert index["dropDups"] is True
+        idx_info = self.col.index_information()
+        assert 'additional_kws' in idx_info
+        idx = idx_info.get('additional_kws')
+        assert idx.get("dropDups"), idx_info
