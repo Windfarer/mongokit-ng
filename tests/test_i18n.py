@@ -36,6 +36,7 @@ class i18nTestCase(unittest.TestCase):
     def setUp(self):
         self.connection = Connection()
         self.col = self.connection.test.mongokit
+        self.maxDiff = None
         
     def tearDown(self):
         self.connection.drop_database('test')
