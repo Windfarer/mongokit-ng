@@ -37,7 +37,7 @@ class i18nTestCase(unittest.TestCase):
         self.connection = Connection()
         self.col = self.connection.test.mongokit
         self.maxDiff = None
-        
+
     def tearDown(self):
         self.connection.drop_database('test')
         self.connection.drop_database('othertest')
@@ -142,10 +142,10 @@ class i18nTestCase(unittest.TestCase):
         doc.save()
 
         raw_doc = self.col.find_one({'_id':doc['_id']})
-        assert raw_doc == {'_id':doc['_id'],
-          'title': {'foo': [{'lang': 'fr', 'value': 'Salut'}, {'lang': 'en', 'value': 'Hello'}],
-          'bar': {'bla': [{'lang': 'fr', 'value': 3}, {'lang': 'en', 'value': 2}]}, 'egg':4}
-        }, raw_doc
+        assert raw_doc['_id'] == doc['_id']
+        assert sorted(raw_doc['title']['foo'], key=lambda k: k['lang']) == sorted([{'lang': 'fr', 'value': 'Salut'}, {'lang': 'en', 'value': 'Hello'}], key=lambda k: k['lang'])
+        assert sorted(raw_doc['title']['bar']['bla'], key=lambda k: k['lang']) == sorted([{'lang': 'fr', 'value': 3}, {'lang': 'en', 'value': 2}], key=lambda k: k['lang'])
+        assert raw_doc['title']['egg'] == 4 
         fetched_doc = self.col.Doc.find_one({'_id':doc['_id']})
         assert fetched_doc['title']['foo']['en'] == 'Hello'
         assert fetched_doc['title']['foo']['fr'] == 'Salut'
@@ -197,19 +197,12 @@ class i18nTestCase(unittest.TestCase):
         doc.save()
 
         raw_doc = self.col.find_one({'_id':doc['_id']})
-        self.assertEqual(raw_doc, {'_id':doc['_id'],
-          'toto': {'titi': {'tata': None}},
-          'title': {
-              'foo':[
-                  {'lang': 'fr', 'value': 'Salut'},
-                  {'lang': 'en', 'value': 'Hello'}
-                ],
-              'bar': {'bla': [
-                  {'lang': 'fr', 'value': 3},
-                  {'lang': 'en', 'value': 2}
-                ]},
-              'egg':4}
-        })
+
+        assert raw_doc['_id'] == doc['_id']
+        assert sorted(raw_doc['title']['foo'], key=lambda k: k['lang']) == sorted([{'lang': 'fr', 'value': 'Salut'}, {'lang': 'en', 'value': 'Hello'}], key=lambda k: k['lang'])
+        assert sorted(raw_doc['title']['bar']['bla'], key=lambda k: k['lang']) == sorted([{'lang': 'fr', 'value': 3}, {'lang': 'en', 'value': 2}], key=lambda k: k['lang'])
+        assert raw_doc['title']['egg'] == 4 
+        assert raw_doc['toto'] == {'titi': {'tata': None}}
         fetched_doc = self.col.Doc.find_one({'_id':doc['_id']})
         assert isinstance(fetched_doc.toto, DotedDict), type(fetched_doc.toto)
         assert isinstance(fetched_doc.toto.titi, DotedDict), type(fetched_doc.toto.titi)
