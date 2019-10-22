@@ -1,6 +1,6 @@
 # mongokit-ng
 
-[![image](https://img.shields.io/pypi/v/mongokit_ng.svg)](https://pypi.python.org/pypi/mongokit_ng) [![image](https://img.shields.io/travis/Windfarer/mongokit_ng.svg)](https://travis-ci.org/Windfarer/mongokit_ng) [![Documentation
+[![image](https://img.shields.io/pypi/v/mongokit_ng.svg)](https://pypi.python.org/pypi/mongokit_ng) [![image](https://img.shields.io/travis/Windfarer/mongokit-ng.svg)](https://travis-ci.org/Windfarer/mongokit-ng) [![Documentation
 Status](https://readthedocs.org/projects/mongokit-ng/badge/?version=latest)](https://mongokit-ng.readthedocs.io/en/latest/?badge=latest) [![Updates](https://pyup.io/repos/github/Windfarer/mongokit_ng/shield.svg)](https://pyup.io/repos/github/Windfarer/mongokit_ng/)
 
 Thanks the origin author [namlook](https://github.com/namlook) to create mongokit [https://github.com/namlook/mongokit](https://github.com/namlook/mongokit)
