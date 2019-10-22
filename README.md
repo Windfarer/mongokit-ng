@@ -1,6 +1,6 @@
 # mongokit-ng
 
-[![image](https://img.shields.io/pypi/v/mongokit_ng.svg)](https://pypi.python.org/pypi/mongokit_ng) [![image](https://img.shields.io/travis/Windfarer/mongokit-ng.svg)](https://travis-ci.org/Windfarer/mongokit-ng) [![Documentation
+[![image](https://img.shields.io/pypi/v/mongokit-ng.svg)](https://pypi.python.org/pypi/mongokit-ng) [![image](https://img.shields.io/travis/Windfarer/mongokit-ng.svg)](https://travis-ci.org/Windfarer/mongokit-ng) [![Documentation
 Status](https://readthedocs.org/projects/mongokit-ng/badge/?version=latest)](https://mongokit-ng.readthedocs.io/en/latest/?badge=latest) [![Updates](https://pyup.io/repos/github/Windfarer/mongokit-ng/shield.svg)](https://pyup.io/repos/github/Windfarer/mongokit-ng/) [![Python 3](https://pyup.io/repos/github/Windfarer/mongokit-ng/python-3-shield.svg)](https://pyup.io/repos/github/Windfarer/mongokit-ng/)
 
 
@@ -15,7 +15,7 @@ This project ports mongokit to Python 3 and the latest pymongo (3.9+) version.
 ## Install
 
 ```
-pip install mongokit_ng
+pip install mongokit-ng
 ```
 
 ## Project Status

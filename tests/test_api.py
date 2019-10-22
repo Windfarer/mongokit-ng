@@ -30,7 +30,7 @@ import unittest
 from mongokit_ng import *
 from bson.objectid import ObjectId
 from pymongo import ReadPreference
-from pymongo.read_preferences import Secondary
+from pymongo.read_preferences import Secondary, SecondaryPreferred
 
 
 class ApiTestCase(unittest.TestCase):
@@ -1082,13 +1082,12 @@ class ApiTestCase(unittest.TestCase):
                 "foo":int,
                 "bar":{"bla":int},
             }
-        con = Connection(readPreference=ReadPreference.SECONDARY_PREFERRED,
-            secondary_acceptable_latency_ms=16)
-        assert isinstance(con.read_preference, Secondary)
+        con = Connection(
+            readPreference='secondaryPreferred')
+        assert isinstance(con.read_preference, SecondaryPreferred), con.read_preference
         con.register([MyDoc])
         col = con['test']['mongokit']
         db = con['test']
-        assert isinstance(db.read_preference, Secondary)
-        assert isinstance(col.MyDoc.find()._Cursor__read_preference, Secondary), col.MyDoc.find()._Cursor__read_preference
-        assert col.MyDoc.find()._Cursor__secondary_acceptable_latency_ms == 16
+        assert isinstance(db.read_preference, SecondaryPreferred)
+        assert isinstance(col.MyDoc.find()._read_preference(), SecondaryPreferred), col.MyDoc.find().__dict__
         con.close()

@@ -83,7 +83,3 @@ class Connection(MongoPieConnection, MongoClient):
 
         # check connected
         self.admin.command("ismaster")
-
-def del_args(key, kwargs):
-    if key in kwargs:
-        del kwargs[key]
