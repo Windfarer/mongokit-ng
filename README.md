@@ -28,3 +28,4 @@ This package was created with
 [audreyr/cookiecutter-pypackage](https://github.com/audreyr/cookiecutter-pypackage)
 project template.
 
+Python 2 Mongokit codebase [https://github.com/namlook/mongokit](https://github.com/namlook/mongokit)
