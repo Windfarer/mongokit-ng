@@ -440,10 +440,6 @@ class AutoRefTestCase(unittest.TestCase):
         docb['b']['deep']['doc_a_deep'] = deep
 
         docb.save()
-        test_doc = self.col.DocB.get_from_id(docb['_id'])
-        assert test_doc['b']['doc_a']['a']['foo'] == 5, test_doc['b']['doc_a']['a']['foo']
-        assert test_doc['b']['deep']['doc_a_deep']['a']['foo'] == 5, test_doc['b']['deep']['doc_a_deep']['a']['foo']
-
         doca.save()
 
         test_doc = self.col.DocB.get_from_id(docb['_id'])
