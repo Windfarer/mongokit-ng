@@ -599,7 +599,7 @@ class IndexTestCase(unittest.TestCase):
         import datetime
         date = datetime.datetime.utcnow()
         import pymongo
-        collection = pymongo.MongoClient()['test']['test_index']
+        collection = pymongo.MongoClient()['test']['mongokit']
 
         mydoc = {'mydoc':{'creation_date':date}, '_id':'aaa'}
         collection.insert(mydoc)
@@ -732,12 +732,9 @@ class IndexTestCase(unittest.TestCase):
                     'fields':[
                         "foo"
                     ],
-                    'dropDups':True,
                     'name':'additional_kws',
                 }
             ]
         self.col.KWDoc.generate_index(self.col)
         idx_info = self.col.index_information()
         assert 'additional_kws' in idx_info
-        idx = idx_info.get('additional_kws')
-        assert idx.get("dropDups"), idx_info

@@ -466,6 +466,7 @@ class Document(SchemaDocument, metaclass=DocumentProperties):
                     if isinstance(field, str):
                         field = (field, 1)
                     fields.append(field)
+            index.pop('check', None)
             log.debug('Creating index for {}'.format(str(given_fields)))
             if ttl and len(fields) == 1:
                 collection.create_index(fields, unique=unique, expireAfterSeconds=ttl, **index)
