@@ -37,6 +37,7 @@ class CustomTypesTestCase(unittest.TestCase):
     def tearDown(self):
         self.connection['test'].drop_collection('mongokit')
         self.connection['test'].drop_collection('test')
+        self.connection.drop_database('test')
 
     def test_custom_type(self):
         import datetime

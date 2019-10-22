@@ -36,7 +36,7 @@ class IndexTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.connection['test'].drop_collection('mongokit')
-        self.connection = None
+        self.connection.drop_database('test')
 
     def test_index_basic(self):
         class Movie(Document):

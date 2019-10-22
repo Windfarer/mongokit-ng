@@ -42,6 +42,7 @@ class AuthTestCase(unittest.TestCase):
     def tearDown(self):
         self.connection['test'].drop_collection('mongokit')
         self.connection['test'].drop_collection('versionned_mongokit')
+        self.connection.drop_database('test')
 
     def test_password_validation(self):
         class SimpleUser(User): pass

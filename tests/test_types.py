@@ -39,7 +39,6 @@ class TypesTestCase(unittest.TestCase):
     def tearDown(self):
         self.connection.drop_database('test')
 
-
     def test_authorized_type(self):
        for auth_type in SchemaDocument.authorized_types:
             if auth_type is dict:

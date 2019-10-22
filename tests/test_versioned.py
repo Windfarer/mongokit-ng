@@ -39,6 +39,7 @@ class VersionedTestCase(unittest.TestCase):
         self.connection['test'].drop_collection('versioned_mongokit')
         self.connection['test'].drop_collection('versioned_mongokit2')
         self.connection['versioned_test'].drop_collection('versioned_mongokit')
+        self.connection.drop_database('test')
 
     def test_save_versioning(self):
         class MyDoc(Document):

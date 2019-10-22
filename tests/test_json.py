@@ -136,7 +136,8 @@ class JsonTestCase(unittest.TestCase):
         mydoc["bla"]["bar"] = 42
         mydoc['spam'] = list(range(10))
         assert  "_id" not in mydoc.to_json_type()
-        assert mydoc.to_json() == '{"bla": {"foo": "bar", "bar": 42}, "spam": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}'
+        import json
+        assert json.loads(mydoc.to_json()) == json.loads('{"bla": {"foo": "bar", "bar": 42}, "spam": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}')
  
     def test_to_json_custom_type(self):
         class CustomDegree(CustomType):

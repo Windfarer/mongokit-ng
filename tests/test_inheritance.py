@@ -35,7 +35,7 @@ class InheritanceTestCase(unittest.TestCase):
         self.col = self.connection.test.mongokit
         
     def tearDown(self):
-        Connection()['test'].drop_collection('mongokit')
+        self.connection.drop_database('test')
 
     def test_simple_inheritance(self):
         class A(SchemaDocument):

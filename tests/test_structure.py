@@ -36,6 +36,7 @@ class StructureTestCase(unittest.TestCase):
         
     def tearDown(self):
         self.connection['test'].drop_collection('mongokit')
+        self.connection.drop_database('test')
 
     def test_no_structure(self):
         failed = False

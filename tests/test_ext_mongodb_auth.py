@@ -64,6 +64,7 @@ class _ExtMongoDBAuthTestCase(unittest.TestCase):
             self.connection.admin.system.users.remove({})
         self.connection.test.system.users.remove({"user": "foo"})
         self.connection.test.drop_collection('mongokit_auth')
+        self.connection.drop_database('test')
 
     def test_auth(self):
         class MyDoc(Document):
