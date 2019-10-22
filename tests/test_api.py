@@ -30,6 +30,7 @@ import unittest
 from mongokit_ng import *
 from bson.objectid import ObjectId
 from pymongo import ReadPreference
+from pymongo.read_preferences import Secondary
 
 
 class ApiTestCase(unittest.TestCase):
@@ -172,29 +173,18 @@ class ApiTestCase(unittest.TestCase):
         assert self.col.MyDoc.find().where('this.bar.bla').count() == 9 #{'foo':0} is not taken
         assert self.col.MyDoc.find().hint([('foo', 1)])
         assert [i['foo'] for i in self.col.MyDoc.find().sort('foo', -1)] == [9,8,7,6,5,4,3,2,1,0]
-        allPlans = self.col.MyDoc.find().explain()['allPlans']
-        allPlans[0].pop('indexBounds', None)
-        allPlans[0].pop('indexOnly', None)
-        allPlans[0].pop('nChunkSkips', None)
-        allPlans[0].pop('scanAndOrder', None)
-        allPlans[0].pop('isMultiKey', None)
-        self.assertEqual(
-            allPlans,
-            [
-                {
-                    'cursor': 'BasicCursor',
-                    'nscannedObjects': 10,
-                    'nscanned': 10,
-                    'n': 10,
-                },
-            ],
-        )
+        exp = self.col.MyDoc.find().explain()
+        assert exp['executionStats']['nReturned'] == 10, exp['executionStats']['nReturned']
+        assert exp['executionStats']['totalDocsExamined'] == 10, exp['executionStats']['totalDocsExamined']
+        assert exp['executionStats']['executionStages']['docsExamined'] == 10, exp['executionStats']['executionStages']['docsExamined']
+        assert exp['ok']
+
         next_doc =  next(self.col.MyDoc.find().sort('foo',1))
         assert callable(next_doc) is False
         assert isinstance(next_doc, MyDoc)
         assert next_doc['foo'] == 0
         assert len(list(self.col.MyDoc.find().skip(3))) == 7, len(list(self.col.MyDoc.find().skip(3)))
-        from mongokit.cursor import Cursor
+        from mongokit_ng.cursor import Cursor
         assert isinstance(self.col.MyDoc.find().skip(3), Cursor)
 
     def test_find_one(self):
@@ -746,13 +736,7 @@ class ApiTestCase(unittest.TestCase):
             mydoc["bar"]['bla'] = i
             mydoc.save()
         explain1 = self.col.MyDoc.find({"foo":{"$gt":4}}).explain()
-        explain2 = self.col.find({'foo':{'gt':4}}).explain()
-        explain1.pop('n')
-        explain2.pop('n')
-        explain1['allPlans'][0].pop('n')
-        explain1.pop('stats', None)
-        explain2['allPlans'][0].pop('n')
-        explain2.pop('stats', None)
+        explain2 = self.col.find({'foo':{'$gt':4}}).explain()
         self.assertEqual(explain1, explain2)
 
     def test_with_long(self):
@@ -1098,10 +1082,13 @@ class ApiTestCase(unittest.TestCase):
                 "foo":int,
                 "bar":{"bla":int},
             }
-        con = Connection(read_preference=ReadPreference.SECONDARY_PREFERRED,
+        con = Connection(readPreference=ReadPreference.SECONDARY_PREFERRED,
             secondary_acceptable_latency_ms=16)
+        assert isinstance(con.read_preference, Secondary)
         con.register([MyDoc])
         col = con['test']['mongokit']
-        assert col.MyDoc.find()._Cursor__read_preference == ReadPreference.SECONDARY_PREFERRED
+        db = con['test']
+        assert isinstance(db.read_preference, Secondary)
+        assert isinstance(col.MyDoc.find()._Cursor__read_preference, Secondary), col.MyDoc.find()._Cursor__read_preference
         assert col.MyDoc.find()._Cursor__secondary_acceptable_latency_ms == 16
         con.close()

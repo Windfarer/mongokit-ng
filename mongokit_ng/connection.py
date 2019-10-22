@@ -1,8 +1,9 @@
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+from pymongo.read_preferences import ReadPreference
 from .database import Database
 from collections.abc import Iterable
-
+import warnings
 class CallableMixin(object):
     def __call__(self, doc=None, gen_skel=True, lang='en', fallback_lang='en'):
         return self._obj_class(
@@ -69,13 +70,15 @@ class Connection(MongoPieConnection, MongoClient):
         if "safe" in kwargs:
             del kwargs["safe"]
 
+        # fixme: new HA https://api.mongodb.com/python/current/examples/high_availability.html
         if "secondary_acceptable_latency_ms" in kwargs:
-            #todo: warning here
+            warnings.warn("DeprecationWarning: secondary_acceptable_latency_ms is deprecated.")
             ms = kwargs["secondary_acceptable_latency_ms"]
             del kwargs["secondary_acceptable_latency_ms"]
-            kwargs["readPreference"]="nearest"
+            if "readPreference" not in kwargs:
+                kwargs["readPreference"]= ReadPreference.NEAREST
             kwargs["localThresholdMS"]=ms
-
+    
         super().__init__(*args, **kwargs)
 
         # check connected
