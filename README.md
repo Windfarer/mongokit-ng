@@ -10,7 +10,7 @@ Mongokit is a Python ODM of MongoDB.
 This project ports mongokit to Python 3 and the latest pymongo (3.9+) version.
 
   - Free software: MIT license
-  - Documentation: <https://mongokit-ng.readthedocs.io>.
+  - Documentation: TODO.
 
 ## Install
 
