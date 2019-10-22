@@ -434,15 +434,20 @@ class AutoRefTestCase(unittest.TestCase):
         docb['b']['doc_a'] = doca
         # create a few deeper  docas
         deep = self.col.DocA()
-        deep['_id'] = 'doca' # XXX same id of doca, this will be erased by doca when saving docb
+        deep['_id'] = 'doca' # XXX same id of doca, this will be erased by doca when saving doca
         deep['a']['foo'] = 5
         deep.save()
         docb['b']['deep']['doc_a_deep'] = deep
 
         docb.save()
+        test_doc = self.col.DocB.get_from_id(docb['_id'])
+        assert test_doc['b']['doc_a']['a']['foo'] == 5, test_doc['b']['doc_a']['a']['foo']
+        assert test_doc['b']['deep']['doc_a_deep']['a']['foo'] == 5, test_doc['b']['deep']['doc_a_deep']['a']['foo']
+
+        doca.save()
 
         test_doc = self.col.DocB.get_from_id(docb['_id'])
-        assert test_doc['b']['doc_a']['a']['foo'] == 3, test_doc['b']['doc_a']['a']
+        assert test_doc['b']['doc_a']['a']['foo'] == 3, test_doc['b']['doc_a']['a']['foo']
         assert test_doc['b']['deep']['doc_a_deep']['a']['foo'] == 3, test_doc['b']['deep']['doc_a_deep']['a']['foo']
 
     def test_autorefs_embed_in_list_with_bad_reference(self):
