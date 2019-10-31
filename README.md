@@ -7,7 +7,8 @@ Status](https://readthedocs.org/projects/mongokit-ng/badge/?version=latest)](htt
 Thanks the origin author [namlook](https://github.com/namlook) to create mongokit [https://github.com/namlook/mongokit](https://github.com/namlook/mongokit)
 
 Mongokit is a Python ODM of MongoDB.
-This project ports mongokit to Python 3 and the latest pymongo (3.9+) version.
+This project ports mongokit to Python 3 and the latest pymongo (3.9+) version...
+
 
   - Free software: MIT license
   - Documentation: TODO.
@@ -17,6 +18,9 @@ This project ports mongokit to Python 3 and the latest pymongo (3.9+) version.
 ```
 pip install mongokit-ng
 ```
+
+## Usage
+same as mongokit, but replace `mongokit` with `mongokit_ng` in all importing.
 
 ## Project Status
 See [https://github.com/Windfarer/mongokit-ng/issues/1](https://github.com/Windfarer/mongokit-ng/issues/1)

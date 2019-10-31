@@ -12,11 +12,11 @@ with open('README.md') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [ ]
+requirements = ["pymongo>=3.9.0"]
 
-setup_requirements = [ "pymongo>=3.9.0" ]
+setup_requirements = []
 
-test_requirements = [ ]
+test_requirements = []
 
 setup(
     author="Windfarer",
